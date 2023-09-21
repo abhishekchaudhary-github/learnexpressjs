@@ -31,57 +31,77 @@
 //     console.log("on 5000")
 // })
 
+// const express = require('express')
+// const app = express();
+// const {products} = require('./data')
+// const {auth} = require('./fakeAuth')
+
+// app.use(auth)
+
+// app.get('/query',(req,res)=>{
+//     const x = req.query;
+//     let t;
+//     if(x.search){
+//         t = products.filter(ob=>{
+//             if(ob.name.startsWith(x.search))
+//             return ob;
+//         })}
+
+//     if(x.limit){
+//         var j = x.limit;
+//             t = products.slice(0,x.limit)
+//         }
+//     if(t.length==0){
+//         return res.status(200).json({success:true, data:[]})
+//     }
+
+//     res.send(t)
+//     })
+
+//     const logger = (req,res,next) =>{
+//         console.log(req.url)
+//         next()
+//     } 
+
+// app.get('/',(req,res)=>{
+//     //res.json(products)
+//     // only want id name
+//     const t = products.map(obj => {
+//         const {id ,name} = obj
+//         return {id, name}})
+//     res.send(t)
+    
+// })
+// app.use(logger)
+// app.get(`/:id`,(req,res)=>{
+//     //res.json(products)
+//     // only want id name
+//     const t = products.filter(obj =>  req.params.id == obj.id )
+//     if(t.length===0){
+//         res.status(404).send('<h2>Page Not Found</h2>')
+//     }
+//     res.send(t)
+    
+// })
+// app.listen(8080)
+
+
+let {people} = require('./data')
+const logger = (req,res,next) => {
+    if(req.body.name){
+        res.status(200).send(`welcome ${req.body.name}`)
+    }
+    else
+    res.status(401).send('type')
+}
+
 const express = require('express')
 const app = express();
-const {products} = require('./data')
-const {auth} = require('./fakeAuth')
-
-app.use(auth)
-
-app.get('/query',(req,res)=>{
-    const x = req.query;
-    let t;
-    if(x.search){
-        t = products.filter(ob=>{
-            if(ob.name.startsWith(x.search))
-            return ob;
-        })}
-
-    if(x.limit){
-        var j = x.limit;
-            t = products.slice(0,x.limit)
-        }
-    if(t.length==0){
-        return res.status(200).json({success:true, data:[]})
-    }
-
-    res.send(t)
-    })
-
-    const logger = (req,res,next) =>{
-        console.log(req.url)
-        next()
-    } 
-
-app.get('/',(req,res)=>{
-    //res.json(products)
-    // only want id name
-    const t = products.map(obj => {
-        const {id ,name} = obj
-        return {id, name}})
-    res.send(t)
-    
+app.get('/api/people',(req,res)=>{
+    res.send(people)
 })
-app.use(logger)
-app.get(`/:id`,(req,res)=>{
-    //res.json(products)
-    // only want id name
-    const t = products.filter(obj =>  req.params.id == obj.id )
-    if(t.length===0){
-        res.status(404).send('<h2>Page Not Found</h2>')
-    }
-    res.send(t)
-    
+app.use(express.urlencoded({ extended: true }))
+app.post('/login',logger,(req,res)=>{
 })
+app.use(express.static('./methos'));
 app.listen(8080)
-
